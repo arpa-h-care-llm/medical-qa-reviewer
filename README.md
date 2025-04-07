@@ -1,4 +1,4 @@
-<--
+<!--
 This source file is part of the ARPA-H CARE LLM project
 
 SPDX-FileCopyrightText: 2025 Stanford University and the project authors (see AUTHORS.md)
@@ -52,7 +52,7 @@ pip install -r requirements.txt
 streamlit run qa_expert_reviewer_app.py
 ```
 
-![App Screenshot](docs/demo_img/.png)
+![App Screenshot](docs/demo_img.png)
 
 ### About the LLM Integration
 
