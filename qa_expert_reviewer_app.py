@@ -15,21 +15,14 @@ import os
 # Third-party imports
 import streamlit as st
 
-
-class ExcelFileColumns:
-    """
-    Class to define the expected columns in the Excel file.
-    """
-
-    NOTE_ID = "Note Id"
-    QUESTION = "Question"
-    DISCHARGE_SUMMARY = "Discharge Summary"
-    LLM_GENERATED_RESPONSE = "LLM-generated Response"
-    PROMPT = "Prompt"
-    EXPERT_RESPONSE = "Expert's Response"
+# Local application imports
+from columns_interface import DischargeSummaryExcelFileColumns
 
 
-st.set_page_config(page_title="Discharge Summary QA Viewer", layout="centered")
+# Choose the column mapping
+col = DischargeSummaryExcelFileColumns()
+
+st.set_page_config(page_title="Medical QA Reviewer", layout="centered")
 
 SAVE_FILE = "saved_expert_responses.xlsx"
 
@@ -78,66 +71,66 @@ if uploaded_file is not None:
 
     if mode == "Includes LLM-generated Response":
         required_cols = {
-            ExcelFileColumns.NOTE_ID,
-            ExcelFileColumns.QUESTION,
-            ExcelFileColumns.DISCHARGE_SUMMARY,
-            ExcelFileColumns.LLM_GENERATED_RESPONSE,
+            col.NOTE_ID,
+            col.QUESTION,
+            col.DISCHARGE_SUMMARY,
+            col.LLM_GENERATED_RESPONSE,
         }
 
         if not required_cols.issubset(df.columns):
             st.error(
-                f"❌ The file must contain: {ExcelFileColumns.NOTE_ID}, {ExcelFileColumns.QUESTION}, {ExcelFileColumns.DISCHARGE_SUMMARY}, and {ExcelFileColumns.LLM_GENERATED_RESPONSE}."
+                f"❌ The file must contain: {col.NOTE_ID}, {col.QUESTION}, {col.DISCHARGE_SUMMARY}, and {col.LLM_GENERATED_RESPONSE}."
             )
             st.stop()
     else:
         required_cols = {
-            ExcelFileColumns.NOTE_ID,
-            ExcelFileColumns.QUESTION,
-            ExcelFileColumns.DISCHARGE_SUMMARY,
-            ExcelFileColumns.PROMPT,
+            col.NOTE_ID,
+            col.QUESTION,
+            col.DISCHARGE_SUMMARY,
+            col.PROMPT,
         }
         if not required_cols.issubset(df.columns):
             st.error(
-                f"❌ The file must contain: {ExcelFileColumns.NOTE_ID}, {ExcelFileColumns.QUESTION}, {ExcelFileColumns.DISCHARGE_SUMMARY}, and {ExcelFileColumns.PROMPT}."
+                f"❌ The file must contain: {col.NOTE_ID}, {col.QUESTION}, {col.DISCHARGE_SUMMARY}, and {col.PROMPT}."
             )
             st.stop()
 
-        if ExcelFileColumns.LLM_GENERATED_RESPONSE in df.columns:
-            df = df.drop(columns=[ExcelFileColumns.LLM_GENERATED_RESPONSE])
+        if col.LLM_GENERATED_RESPONSE in df.columns:
+            df = df.drop(columns=[col.LLM_GENERATED_RESPONSE])
 
-        df[ExcelFileColumns.LLM_GENERATED_RESPONSE] = df.apply(
+        df[col.LLM_GENERATED_RESPONSE] = df.apply(
             lambda row: generate_llm_response_from_prompt(
-                row[ExcelFileColumns.PROMPT],
-                row[ExcelFileColumns.DISCHARGE_SUMMARY],
-                row[ExcelFileColumns.QUESTION],
+                row[col.PROMPT],
+                row[col.DISCHARGE_SUMMARY],
+                row[col.QUESTION],
             ),
             axis=1,
         )
 
     reviewed_note_ids = {
-        r[ExcelFileColumns.NOTE_ID] for r in st.session_state.saved_responses
+        r[col.NOTE_ID] for r in st.session_state.saved_responses
     }
     remaining_note_ids = [
-        nid for nid in df[ExcelFileColumns.NOTE_ID] if nid not in reviewed_note_ids
+        nid for nid in df[col.NOTE_ID] if nid not in reviewed_note_ids
     ]
 
     if not remaining_note_ids:
         st.success("🎉 All notes have been reviewed!")
     else:
         selected_note_id = st.selectbox(
-            f"Select {ExcelFileColumns.NOTE_ID}", remaining_note_ids
+            f"Select {col.NOTE_ID}", remaining_note_ids
         )
-        row_index = df.index[df[ExcelFileColumns.NOTE_ID] == selected_note_id].tolist()[
+        row_index = df.index[df[col.NOTE_ID] == selected_note_id].tolist()[
             0
         ]
 
-        st.subheader(ExcelFileColumns.QUESTION)
+        st.subheader(col.QUESTION)
         st.markdown(
-            f"<div style='font-weight:bold; font-size:16px'>{df.at[row_index, ExcelFileColumns.QUESTION]}</div>",
+            f"<div style='font-weight:bold; font-size:16px'>{df.at[row_index, col.QUESTION]}</div>",
             unsafe_allow_html=True,
         )
 
-        st.subheader(f"📄 {ExcelFileColumns.DISCHARGE_SUMMARY}")
+        st.subheader(f"📄 {col.DISCHARGE_SUMMARY}")
         st.markdown(
             f"""<div style='padding:15px; background-color:#f8f9fa; border:1px solid #ddd; border-radius:5px;
                  height:400px; overflow-y:auto; white-space:pre-wrap; font-family:monospace; font-size:15px;'>
@@ -145,10 +138,10 @@ if uploaded_file is not None:
             unsafe_allow_html=True,
         )
 
-        st.subheader(ExcelFileColumns.LLM_GENERATED_RESPONSE)
+        st.subheader(col.LLM_GENERATED_RESPONSE)
         edited_response = st.text_area(
             "Edit or review the response below:",
-            value=str(df.at[row_index, ExcelFileColumns.LLM_GENERATED_RESPONSE]),
+            value=str(df.at[row_index, col.LLM_GENERATED_RESPONSE]),
             height=300,
         )
 
@@ -169,16 +162,16 @@ if uploaded_file is not None:
 
             if st.button("💾 Save Expert's Response"):
                 record = {
-                    ExcelFileColumns.NOTE_ID: df.at[
-                        row_index, ExcelFileColumns.NOTE_ID
+                    col.NOTE_ID: df.at[
+                        row_index, col.NOTE_ID
                     ],
-                    ExcelFileColumns.QUESTION: df.at[
-                        row_index, ExcelFileColumns.QUESTION
+                    col.QUESTION: df.at[
+                        row_index, col.QUESTION
                     ],
-                    ExcelFileColumns.DISCHARGE_SUMMARY: df.at[
-                        row_index, ExcelFileColumns.DISCHARGE_SUMMARY
+                    col.DISCHARGE_SUMMARY: df.at[
+                        row_index, col.DISCHARGE_SUMMARY
                     ],
-                    ExcelFileColumns.EXPERT_RESPONSE: st.session_state.approved_responses[
+                    col.EXPERT_RESPONSE: st.session_state.approved_responses[
                         selected_note_id
                     ],
                 }
