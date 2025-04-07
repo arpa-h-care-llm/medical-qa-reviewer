@@ -67,24 +67,26 @@ To customize the column names, create a new class that inherits from ExcelFileCo
 ```python
 from columns_interface import ExcelFileColumnInterface
 
-class CustomExcelColumns(ExcelFileColumnInterface):
-    @property
-    def NOTE_ID(self): return "RecordID"
+class DischargeSummaryExcelFileColumns(ExcelFileColumnInterface):
+    """Default column names for standard medical QA review."""
 
     @property
-    def QUESTION(self): return "PatientQuestion"
+    def NOTE_ID(self): return "Note Id"
 
     @property
-    def DISCHARGE_SUMMARY(self): return "NoteText"
+    def QUESTION(self): return "Question"
 
     @property
-    def LLM_GENERATED_RESPONSE(self): return "ModelOutput"
+    def CLINICAL_TEXT(self): return "Discharge Summary"
 
     @property
-    def PROMPT(self): return "PromptTemplate"
+    def LLM_GENERATED_RESPONSE(self): return "LLM-generated Response"
 
     @property
-    def EXPERT_RESPONSE(self): return "ExpertAnnotation"
+    def PROMPT(self): return "Prompt"
+
+    @property
+    def EXPERT_RESPONSE(self): return "Expert's Response"
 ```
 
 Then, in `qa_expert_reviewer_app.py`, replace the default class with your own:
