@@ -1,3 +1,12 @@
+<--
+This source file is part of the ARPA-H CARE LLM project
+
+SPDX-FileCopyrightText: 2025 Stanford University and the project authors (see AUTHORS.md)
+
+SPDX-License-Identifier: MIT
+
+-->
+
 # Discharge Summary QA Viewer
 
 This is a Streamlit-based application for reviewing and editing LLM-generated responses to discharge summary questions. It supports two usage modes:
@@ -42,6 +51,8 @@ pip install -r requirements.txt
 ```bash
 streamlit run qa_expert_reviewer_app.py
 ```
+
+![App Screenshot](docs/demo_img/.png)
 
 ### About the LLM Integration
 

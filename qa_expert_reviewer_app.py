@@ -1,3 +1,10 @@
+# This source file is part of the ARPA-H CARE LLM project
+#
+# SPDX-FileCopyrightText: 2025 Stanford University and the project authors (see AUTHORS.md)
+#
+# SPDX-License-Identifier: MIT
+#
+
 import streamlit as st
 import pandas as pd
 from io import BytesIO
