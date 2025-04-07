@@ -22,7 +22,7 @@ class ExcelFileColumnInterface(ABC):
 
     @property
     @abstractmethod
-    def DISCHARGE_SUMMARY(self): pass
+    def CLINICAL_TEXT(self): pass
 
     @property
     @abstractmethod
@@ -47,7 +47,7 @@ class DischargeSummaryExcelFileColumns(ExcelFileColumnInterface):
     def QUESTION(self): return "Question"
 
     @property
-    def DISCHARGE_SUMMARY(self): return "Discharge Summary"
+    def CLINICAL_TEXT(self): return "Discharge Summary"
 
     @property
     def LLM_GENERATED_RESPONSE(self): return "LLM-generated Response"

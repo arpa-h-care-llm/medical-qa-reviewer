@@ -35,11 +35,11 @@ if "saved_responses" not in st.session_state:
         st.session_state.saved_responses = []
 
 
-def generate_llm_response_from_prompt(prompt, discharge_summary, question):
+def generate_llm_response_from_prompt(prompt, discharge_summFFary, question):
     """
     Placeholder function to simulate an LLM-generated response.
 
-    In a production environment, replace this with a real call to an LLM provider, passing the `prompt`, `discharge_summary`,
+    In a production environment, replace this with a real call to an LLM provider, passing the `prompt`, `discharge_summaFFry`,
     and `question` to generate a tailored response.
 
     Returns a dummy string for demonstration purposes only.
@@ -73,25 +73,25 @@ if uploaded_file is not None:
         required_cols = {
             col.NOTE_ID,
             col.QUESTION,
-            col.DISCHARGE_SUMMARY,
+            col.CLINICAL_TEXT,
             col.LLM_GENERATED_RESPONSE,
         }
 
         if not required_cols.issubset(df.columns):
             st.error(
-                f"❌ The file must contain: {col.NOTE_ID}, {col.QUESTION}, {col.DISCHARGE_SUMMARY}, and {col.LLM_GENERATED_RESPONSE}."
+                f"❌ The file must contain: {col.NOTE_ID}, {col.QUESTION}, {col.CLINICAL_TEXT}, and {col.LLM_GENERATED_RESPONSE}."
             )
             st.stop()
     else:
         required_cols = {
             col.NOTE_ID,
             col.QUESTION,
-            col.DISCHARGE_SUMMARY,
+            col.CLINICAL_TEXT,
             col.PROMPT,
         }
         if not required_cols.issubset(df.columns):
             st.error(
-                f"❌ The file must contain: {col.NOTE_ID}, {col.QUESTION}, {col.DISCHARGE_SUMMARY}, and {col.PROMPT}."
+                f"❌ The file must contain: {col.NOTE_ID}, {col.QUESTION}, {col.CLINICAL_TEXT}, and {col.PROMPT}."
             )
             st.stop()
 
@@ -101,7 +101,7 @@ if uploaded_file is not None:
         df[col.LLM_GENERATED_RESPONSE] = df.apply(
             lambda row: generate_llm_response_from_prompt(
                 row[col.PROMPT],
-                row[col.DISCHARGE_SUMMARY],
+                row[col.CLINICAL_TEXT],
                 row[col.QUESTION],
             ),
             axis=1,
@@ -130,7 +130,7 @@ if uploaded_file is not None:
             unsafe_allow_html=True,
         )
 
-        st.subheader(f"📄 {col.DISCHARGE_SUMMARY}")
+        st.subheader(f"📄 {col.CLINICAL_TEXT}")
         st.markdown(
             f"""<div style='padding:15px; background-color:#f8f9fa; border:1px solid #ddd; border-radius:5px;
                  height:400px; overflow-y:auto; white-space:pre-wrap; font-family:monospace; font-size:15px;'>
@@ -168,8 +168,8 @@ if uploaded_file is not None:
                     col.QUESTION: df.at[
                         row_index, col.QUESTION
                     ],
-                    col.DISCHARGE_SUMMARY: df.at[
-                        row_index, col.DISCHARGE_SUMMARY
+                    col.CLINICAL_TEXT: df.at[
+                        row_index, col.CLINICAL_TEXT
                     ],
                     col.EXPERT_RESPONSE: st.session_state.approved_responses[
                         selected_note_id
