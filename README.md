@@ -113,7 +113,7 @@ To connect it to a real LLM (like OpenAI's GPT-4 or Google's Gemini), replace th
 
 ### Disclaimer
 
-This app is for local use and prototyping only. Do not upload sensitive or identifiable patient data unless deployed in a secure, compliant environment.
+This app is for local use and prototyping only.
 
 
 ### License
