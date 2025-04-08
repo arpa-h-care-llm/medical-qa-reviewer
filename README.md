@@ -56,9 +56,9 @@ _This is an app screenshot from a hospital discharge patient question answering 
 ![App Screenshot](docs/demo_img.png)
 
 
-### Column Name Abstraction
+### Data Schema Abstraction
 
-To support flexibility across different datasets and institutions, the app uses an abstract interface called `ExcelFileColumnInterface` to define the expected column names in the uploaded Excel files.
+To support flexibility across different datasets and institutions, the app uses an abstract interface called `ExcelFileColumnInterface` to define the expected data schema, i.e., column names in the uploaded Excel files.
 
 Different teams might name their columns differently (e.g., `"Note Id"` vs. `"RecordID"`). Rather than hardcoding column names throughout the app, this interface allows developers to plug in their own mappings by subclassing and overriding only what they need.
 
